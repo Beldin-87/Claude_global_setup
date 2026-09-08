@@ -1,4 +1,4 @@
-﻿# Zeilenenden deterministisch halten, damit Windows-Checkouts keine
+# Zeilenenden deterministisch halten, damit Windows-Checkouts keine
 # Phantom-Diffs erzeugen.
 * text=auto
 
