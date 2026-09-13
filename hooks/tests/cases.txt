@@ -1,0 +1,128 @@
+BLOCK Bash git push
+BLOCK Bash git push --force-with-lease
+BLOCK Bash git -C "G:/Pfad mit Leerzeichen/repo" push
+BLOCK Bash git --no-pager push origin main
+BLOCK Bash git add . && git commit -m x && git push
+BLOCK Bash git reset --hard
+BLOCK Bash git reset --hard HEAD~1
+BLOCK Bash git clean -f
+BLOCK Bash git clean -fd
+BLOCK Bash git clean -fdx
+BLOCK Bash git clean -xf
+BLOCK Bash git clean --force
+BLOCK Bash git branch -D feature-x
+BLOCK Bash git branch --delete --force feature-x
+BLOCK Bash git branch -d --force feature-x
+BLOCK Bash git checkout .
+BLOCK Bash git checkout -- .
+BLOCK Bash git restore .
+BLOCK Bash git restore --staged --worktree .
+BLOCK Bash git stash
+BLOCK Bash git stash;
+BLOCK Bash git stash && echo weiter
+BLOCK Bash git stash pop
+BLOCK Bash git stash pop --index
+BLOCK Bash rm -r build
+BLOCK Bash rm -rf build
+BLOCK Bash rm -fr build
+BLOCK Bash rm -R build
+BLOCK Bash rm -rf -- build
+BLOCK Bash cd /tmp && rm -rf altes-verzeichnis
+BLOCK PowerShell Remove-Item -Recurse C:\temp\x
+BLOCK PowerShell Remove-Item -Recurse -Force C:\temp\x
+BLOCK PowerShell remove-item -recurse -force C:\temp\x
+BLOCK PowerShell rm -r C:\temp\x
+BLOCK PowerShell ri -r C:\temp\x
+BLOCK PowerShell rmdir /s C:\temp\x
+BLOCK PowerShell RMDIR /S C:\temp\x
+BLOCK PowerShell rd /s /q C:\temp\x
+BLOCK PowerShell del /s C:\temp\*.tmp
+BLOCK PowerShell git push
+BLOCK PowerShell Set-Location C:\repo; git push origin main
+BLOCK PowerShell git reset --hard
+BLOCK PowerShell git branch -D feature-x
+ALLOW Bash git status
+ALLOW Bash git log --oneline -5
+ALLOW Bash git diff
+ALLOW Bash git add .
+ALLOW Bash git commit -m "push fix"
+ALLOW Bash git log --grep=push
+ALLOW Bash git branch -d merged-branch
+ALLOW Bash git checkout main
+ALLOW Bash git checkout -b feature
+ALLOW Bash git restore --staged datei.txt
+ALLOW Bash git reset --soft HEAD~1
+ALLOW Bash git reset datei.txt
+ALLOW Bash git clean -n
+ALLOW Bash git stash list
+ALLOW Bash git stash push -u -m "tag"
+ALLOW Bash git stash apply 1a2b3c4
+ALLOW Bash git stash drop stash@{0}
+ALLOW Bash git stash show
+ALLOW Bash rm datei.txt
+ALLOW Bash rm -f datei.txt
+ALLOW Bash rmdir leerer-ordner
+ALLOW Bash echo push
+ALLOW Bash npm run build
+ALLOW Bash git-push-helper --help
+ALLOW Bash grep -ri muster src
+ALLOW Bash git status --short
+ALLOW PowerShell Remove-Item datei.txt
+ALLOW PowerShell Remove-Item -Force datei.txt
+ALLOW PowerShell Get-ChildItem -Recurse
+ALLOW PowerShell git status --short
+BLOCK Bash powershell -Command "git push"
+BLOCK Bash bash -c "git push origin main"
+BLOCK Bash sh -c 'rm -rf build'
+BLOCK Bash cmd /c "rmdir /s /q x"
+BLOCK Bash `git push`
+BLOCK Bash Git push
+BLOCK Bash GIT PUSH
+BLOCK Bash RM -rf dist
+BLOCK Bash rm --recursive dist
+BLOCK Bash rm --recursive --force dist
+BLOCK Bash git stash clear
+BLOCK Bash git worktree remove --force pfad
+BLOCK Bash git worktree remove -f pfad
+BLOCK Bash env X=1 git push
+BLOCK Bash xargs git push
+BLOCK Bash timeout 30 git push
+BLOCK PowerShell Git Push
+BLOCK PowerShell Remove-Item -Path x -Recurse:$true
+BLOCK PowerShell rm -Recurse x
+BLOCK PowerShell powershell -Command "git push"
+ALLOW Bash git worktree remove pfad
+ALLOW Bash git worktree list
+ALLOW Bash git worktree prune
+ALLOW Bash git commit -m "stash clear later"
+ALLOW Bash rm --force datei.txt
+ALLOW Bash echo "recursive"
+ALLOW Bash grep -r push src
+ALLOW Bash git rm -r --cached node_modules
+ALLOW Bash git rm -r build/
+ALLOW Bash git rm datei.txt
+ALLOW Bash git -C "G:/pfad mit leerzeichen" rm -r x
+ALLOW Bash GIT RM -r x
+BLOCK Bash git status; rm -rf x
+BLOCK Bash git rm datei.txt && rm -r build
+BLOCK Bash rm -r x
+BLOCK PowerShell rd -Recurse -Force C:/temp/x
+BLOCK PowerShell rmdir -Recurse C:/temp/x
+BLOCK PowerShell del -Recurse C:/temp/x
+BLOCK PowerShell erase -Recurse C:/temp/x
+BLOCK PowerShell Remove-Item -LiteralPath 'C:\x' -Recurse -Force
+BLOCK Bash find . -delete
+BLOCK Bash find . -name "*.tmp" -delete
+BLOCK Bash npx rimraf node_modules
+BLOCK Bash rimraf dist
+BLOCK Bash python -c "import shutil; shutil.rmtree('build')"
+BLOCK Bash python -c "from shutil import rmtree; rmtree('build')"
+ALLOW Bash find . -name "*.py"
+ALLOW Bash find . -type f -newer x
+ALLOW Bash del datei.txt
+ALLOW Bash rd leerer-ordner
+ALLOW Bash echo rimraf
+ALLOW Bash npm ls rimraf
+ALLOW PowerShell del datei.txt
+ALLOW PowerShell rd leerer-ordner
+ALLOW PowerShell Remove-Item datei.txt -Force

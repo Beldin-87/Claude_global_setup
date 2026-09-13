@@ -7,5 +7,8 @@
 *.psm1  text eol=crlf
 *.psd1  text eol=crlf
 
+# Bash-Skripte brauchen LF, auch auf Windows-Checkouts.
+*.sh text eol=lf
+
 # Sicherungen der Steuerdateien bleiben byte-exakt (CRLF/LF wie im Original).
 archiv/** -text
