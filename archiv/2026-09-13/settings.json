@@ -1,0 +1,138 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__58ac9104-b3de-4938-9b7f-6bb4c03ae26d__search_threads",
+      "mcp__58ac9104-b3de-4938-9b7f-6bb4c03ae26d__get_thread",
+      "mcp__58ac9104-b3de-4938-9b7f-6bb4c03ae26d__get_message",
+      "mcp__58ac9104-b3de-4938-9b7f-6bb4c03ae26d__list_drafts",
+      "mcp__claude-in-chrome__find",
+      "mcp__claude-in-chrome__get_page_text",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__Claude_Browser__get_page_text",
+      "mcp__Claude_Browser__find",
+      "mcp__Claude_Browser__read_page",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "mcp__obsidian__read-note",
+      "mcp__scheduled-tasks__list_scheduled_tasks"
+    ],
+    "deny": [
+      "mcp__claude_ai_Microsoft_365",
+      "mcp__claude_ai_Microsoft_365__authenticate",
+      "mcp__claude_ai_Microsoft_365__complete_authentication",
+      "DesignSync",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "Bash(git push *)",
+      "Bash(gh *)",
+      "mcp__github"
+    ],
+    "additionalDirectories": [
+      "C:\\GitHub\\Projekte"
+    ]
+  },
+  "model": "fable[1m]",
+  "skillOverrides": {
+    "agents-sdk": "user-invocable-only",
+    "cloudflare": "user-invocable-only",
+    "cloudflare-email-service": "user-invocable-only",
+    "cloudflare-one": "user-invocable-only",
+    "cloudflare-one-migrations": "user-invocable-only",
+    "durable-objects": "user-invocable-only",
+    "sandbox-sdk": "user-invocable-only",
+    "turnstile-spin": "user-invocable-only",
+    "workers-best-practices": "user-invocable-only",
+    "wrangler": "user-invocable-only",
+    "web-perf": "user-invocable-only"
+  },
+  "disableRemoteControl": true,
+  "disableWorkflows": true,
+  "disableArtifact": true,
+  "enabledPlugins": {
+    "obsidian@obsidian-skills": true,
+    "diagram-design@diagram-design": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/anthropics/claude-plugins-official.git"
+      }
+    },
+    "obsidian-skills": {
+      "source": {
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
+      }
+    },
+    "diagram-design": {
+      "source": {
+        "source": "github",
+        "repo": "cathrynlavery/diagram-design"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
+  "autoMemoryEnabled": false,
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark",
+  "remoteControlAtStartup": false,
+  "crossSessionInbound": "refuse",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/guard-destructive.sh\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/read-gate.sh\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/agent-gate.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/post-edit.sh\"",
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/check-eol.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}

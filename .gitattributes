@@ -6,3 +6,6 @@
 *.ps1   text eol=crlf
 *.psm1  text eol=crlf
 *.psd1  text eol=crlf
+
+# Sicherungen der Steuerdateien bleiben byte-exakt (CRLF/LF wie im Original).
+archiv/** -text
