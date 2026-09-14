@@ -37,7 +37,7 @@ Zeilenenden erhalten: `CLAUDE.md` CRLF (52 Zeilen, 52 CR), die vier anderen LF.
 | Skill-Liste, Einträge | 54 | 52 | −2 |
 | Executor-Startkontext ohne Tool-Aufruf, Tokens (Probe) | 42.564 | 39.390 | −3.174 (−7,5 %) |
 
-Die Token-Probe ist eine Einzelmessung mit demselben Auftrag wie am 13.09. („beschreibe deinen Kontext ohne Tool-Aufruf“); die Größenordnung passt zur Bytes-Schätzung (rund 2.000 Tokens Ersparnis je Executor-Turn). `/context` in einer frischen Hauptsession steht noch aus (Sebastian).
+Die Token-Probe ist eine Einzelmessung mit demselben Auftrag wie am 13.09. („beschreibe deinen Kontext ohne Tool-Aufruf“); die Größenordnung passt zur Bytes-Schätzung (rund 2.000 Tokens Ersparnis je Executor-Turn). `/context` in einer frischen Hauptsession (Sebastian, 2026-09-14): 42,9k Tokens belegt, davon über dieses Setup steuerbar rund 7,9k: Memory-Dateien (`CLAUDE.md` + `rules/context7.md`) 3,3k, Skill-Liste 4,5k, Agent-Liste 0,1k. Der Rest ist Harness: MCP-Tools 11,3k (dazu 72,8k deferred, die nichts kosten), System-Tools 7,8k, Systemprompt 4,4k, Nachrichten 11,5k. Einen Vorher-Wert aus einer Hauptsession gibt es nicht; die Byte-Schätzung des Audits (7.320 → 4.740 Tokens) rechnete mit rund 4 Bytes je Token, gemessen sind es 2,3 (deutscher Regeltext) bis 2,8 (Skill-Beschreibungen). Verlässliches Vorher/Nachher-Paar bleibt die Executor-Probe.
 
 ## 4. Befund: `skillOverrides` und Plugin-Skills
 
@@ -51,7 +51,7 @@ Nebenbefunde derselben Tests: Subagenten einer laufenden Session sehen den aktue
 
 Für Sebastian:
 - Branch `claude/global-setup-umsetzung-2026-459da7` nach `main` mergen und pushen; im Skills-Repo `~/.claude/skills` die sechs staged Löschungen und vier Beschreibungsänderungen committen (dort liegen weitere, ältere uncommittete Änderungen).
-- `/context` in einer frischen Hauptsession als Nachher-Messung; Entscheidung zu den Plugin-Overrides (Abschnitt 4).
+- Entscheidung zu den Plugin-Overrides (Abschnitt 4).
 - Worktree-Hülle `.claude/worktrees/global-setup-audit-fed341` ist weiter gesperrt („Device or resource busy“); nach Neustart der Desktop-App `rmdir`.
 - GitHub: Standard-Branch auf `main` umstellen, Remote-Branch `claude/global-setup-audit-fed341` löschen.
 - Paket C (ESLint-Hook ins WlH-Repo, eigene Session) und Paket D (Sediment: `.bak`-Dateien im `~/.claude`-Root, drei Temp-Testordner, fünf Memory-Ordner) wie in `empfehlungen.md` Abschnitt 9 und 10.
