@@ -19,6 +19,7 @@ Handoffs zwischen Sessions liegen unter
 - `inventar.md`, `empfehlungen.md` — Bestandsaufnahme und Entscheidungen des Audits.
 - `umsetzung-<Datum>.md` — Protokoll einer Umsetzung: was geändert wurde, Prüfergebnis, Messung vorher/nachher, offene Punkte.
 - `archiv/<Datum>/` — byte-exakte Sicherungen der Steuerdateien aus `~/.claude` vor einer Änderung, eine Kopie je Umsetzungsdatum (z. B. `archiv/2026-09-13/`).
+- `archiv/bak-dateien/`, `archiv/memory/<Projektordnername>/` — byte-exakte Archivkopien von Sediment aus `~/.claude` (alte `.bak`-Dateien, Projekt-Memory-Ordner), damit Sebastian die Originale gefahrlos löschen kann.
 - `hooks/tests/` — Regressionsmatrix für die globalen Hooks unter `~/.claude/hooks/` (siehe `hooks/tests/README.md`).
 
 ## Bewusste Dopplungen
