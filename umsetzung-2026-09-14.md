@@ -6,7 +6,7 @@ _Stand 2026-09-14. Freigabe durch Sebastian am 2026-09-14 für Paket D aus dem S
 
 **Teil 1 — sechs `.bak`-Dateien** (`CLAUDE.md.bak-2026-08-22`, `CLAUDE.md.bak-2026-09-03`, `CLAUDE.md.bak-2026-09-03-vor-ap2`, `CONTEXT.md.bak-2026-09-03`, `settings.json.bak-2026-09-12`, `settings.json.bak-2026-09-13`) byte-exakt (md5-geprüft) nach `archiv/bak-dateien/` kopiert und committet, zusammen 34.941 Bytes.
 
-**Teil 2 — fünf Memory-Ordner** (`C--GitHub-Projekte-IIBA-CBAP`, `C--GitHub-Projekte-Plan-Legacy-code-Migration`, `C--GitHub-Projekte-Pv-Anlage-Konvo`, `C--GitHub-Projekte-Repo-SA-Analyse`, `G--Meine-Ablage-Projekte-WlH-Preiskalkulation`; 27 Dateien, 145.515 Bytes) byte-exakt (md5-geprüft) nach `archiv/memory/<Projektordnername>/` kopiert, aber **nicht committet**: Die Sensibilitätsprüfung fand in mehreren Dateien echte Treffer (siehe unten). Nach der Vorgabe für diesen Fall geht nur Teil 1 in den Commit; Teil 2 bleibt als unversionierte Kopie im Arbeitsverzeichnis liegen, bis die gefundenen Stellen bewertet sind.
+**Teil 2 — fünf Memory-Ordner** (`C--GitHub-Projekte-IIBA-CBAP`, `C--GitHub-Projekte-Plan-Legacy-code-Migration`, `C--GitHub-Projekte-Pv-Anlage-Konvo`, `C--GitHub-Projekte-Repo-SA-Analyse`, `G--Meine-Ablage-Projekte-WlH-Preiskalkulation`; 27 Dateien, 145.515 Bytes) byte-exakt (md5-geprüft) nach `archiv/memory/<Projektordnername>/` kopiert, aber **nicht committet**: Die Sensibilitätsprüfung fand in mehreren Dateien echte Treffer (siehe unten). Nach der Vorgabe für diesen Fall ging nur Teil 1 in den Commit; die unversionierten Kopien von Teil 2 wurden nach der Prüfung wieder aus dem Arbeitsverzeichnis entfernt. Die Memory-Ordner werden nicht im Repo archiviert: 26 der 27 Dateien sind älter als der letzte Memory-Vault-Abgleich vom 22.08.2026; die eine jüngere Notiz (Klimaanlage, Stand 05.09.) ist bis auf einen Nachfass-Status vom 05.09. in den Vault-Seiten zur Klimaanlage abgedeckt. Empfehlung: vor dem Löschen lokal zippen, außerhalb von Git.
 
 ### Sensibilitätsprüfung
 
@@ -25,7 +25,7 @@ Sicher archiviert und committet — Original kann gelöscht werden:
 Bereits verbessert im Repo vorhanden (`hooks/tests/`, `cases.txt` byte-identisch) — Original kann gelöscht werden:
 - die drei Temp-Ordner `hooktest`, `hooktest2`, `eoltest` unter `%LOCALAPPDATA%\Temp`.
 
-Noch NICHT löschen — Kopie liegt nur unversioniert im Arbeitsverzeichnis, Entscheidung zu den Sensibilitätsfunden steht aus:
+Nicht im Repo archiviert (sensible Inhalte); Löschen nach Sebastians Entscheidung, empfohlen mit lokalem Zip vorher:
 - die fünf Memory-Ordner unter `C:\Users\szieg\.claude\projects\...\memory`.
 
 ## Plugin-Overrides
