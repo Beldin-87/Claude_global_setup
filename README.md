@@ -23,6 +23,7 @@ Handoffs zwischen Sessions liegen unter
 - `archiv/<Datum>/` — byte-exakte Sicherungen der Steuerdateien aus `~/.claude` vor einer Änderung, eine Kopie je Umsetzungsdatum (z. B. `archiv/2026-09-13/`). Bei zwei Umsetzungen an einem Tag trägt der zweite Ordner ein Thema-Suffix (`archiv/2026-09-20-token-spar-policies/`); ein Unterordner `vault/` hält Sicherungen von Dateien außerhalb von `~/.claude`, wenn eine Umsetzung sie mit ändert.
 - `archiv/bak-dateien/` — byte-exakte Archivkopien alter `.bak`-Dateien aus `~/.claude`, damit die Originale gefahrlos gelöscht werden können.
 - `hooks/tests/` — Regressionsmatrix für die globalen Hooks unter `~/.claude/hooks/` (siehe `hooks/tests/README.md`).
+- `messung/` — Messskripte für die Transkript-Analyse (Kontextfüller, Prompt-Cache-Writes), Basislinie vom 2026-09-20 und README mit Aufruf und Kennzahlen für die Nachmessung.
 
 ## Bewusste Dopplungen
 

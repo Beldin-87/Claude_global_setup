@@ -1,0 +1,511 @@
+==============================================================================
+Context-Fill-Analyse von Claude-Code-Transkripten
+==============================================================================
+Zeitraum: letzte 60 Tage. Token-Zahlen sind Naeherungen (Zeichen / 4), AUSSER 'Endkontext' in Abschnitt E und F: der stammt direkt aus den usage-Feldern des letzten Assistant-Turns (input_tokens + cache_read_input_tokens + cache_creation_input_tokens) und ist damit ein von Anthropic gemeldeter, exakter Wert.
+Laufzeit des Skripts: 5.6s
+
+Subagent-Transkripte gefunden (<= 60 Tage): 897 (uebersprungen, aelter: 10); erfolgreich verarbeitet: 897
+Hauptsession-Transkripte gefunden (<= 60 Tage): 214 (uebersprungen, aelter: 0); erfolgreich verarbeitet: 214
+
+Plausibilitaetsprobe gegen cache_ttl_analysis.py (dort zuletzt 882 Sub- / 211 Hauptsession-Transkripte, files_ok):
+  Hier: 897 Sub- / 214 Hauptsession-Transkripte.
+  Abweichung erwartungsgemaess klein positiv: Datenbestand waechst laufend (neue Sessions seit der Referenzmessung), gleiche Discovery-/Cutoff-Logik wie in cache_ttl_analysis.py.
+
+==============================================================================
+ABSCHNITT A -- Kontextfueller je Kategorie (SUBAGENT)
+==============================================================================
+Gesamtzeichen aller content-Bloecke (Summenprobe-Basis): 208.095.471 (~52.023.868 Tokens)
+Summe der 4 Kategorien:                                  171.550.622 (~42.887.656 Tokens)
+Abweichung gesamt: 17.56% (je Transkript: Median 0.00%, p90 0.04%, Max 98.79%)
+  -> ueber 5%: Ursache sind nicht-textuelle Bloecke (v. a. Bilder, z. B. Screenshots) in tool_result, die in die Summenprobe (raw, als JSON-Groesse inkl. Base64) aber nicht in die 4 Kategorien (nur Text) einfliessen. Groesste Quellen hier: Read 19.966.802 Zeichen, mcp__Claude_Browser 8.100.096 Zeichen, mcp__claude-in-chrome 266.381 Zeichen. Direkt im Content liegende Bild-/Dokument-Bloecke (ausserhalb tool_result): 8.199.299 Zeichen.
+
+Kategorie              Summe Zeichen      ~Tokens      Anteil   Median/Datei(%)  p90/Datei(%)
+1. tool_result (gesamt)       117.989.452   29.497.363      68.8%           68.6          89.3
+2. Assistant-Text+Thinking     17.011.653    4.252.913       9.9%            6.4          22.2
+3. Tool-Use-Inputs             30.289.490    7.572.372      17.7%           13.7          34.9
+4. User-Text                    6.260.027    1.565.007       3.6%            3.6          11.0
+
+tool_result nach Tool (Top 15 nach Zeichen):
+Tool                                Zeichen      ~Tokens  Anteil an tool_result
+Read                             79.243.444   19.810.861                  67.2%
+Bash                             28.693.671    7.173.418                  24.3%
+Grep                              2.399.896      599.974                   2.0%
+WebSearch                         2.255.311      563.828                   1.9%
+WebFetch                          1.477.486      369.372                   1.3%
+mcp__Claude_Browser               1.058.355      264.589                   0.9%
+Edit                                901.377      225.344                   0.8%
+PowerShell                          440.652      110.163                   0.4%
+mcp__58ac9104-b3de-4938-9b7f-6bb4c03ae26d        429.469      107.367                   0.4%
+Glob                                305.059       76.265                   0.3%
+Write                               276.188       69.047                   0.2%
+mcp__context7                       253.448       63.362                   0.2%
+Agent                               130.474       32.618                   0.1%
+sonstige                            101.142       25.286                   0.1%
+mcp__claude-in-chrome                 9.748        2.437                   0.0%
+
+------------------------------------------------------------------------------
+ABSCHNITT B -- Read-Tiefe (SUBAGENT)
+------------------------------------------------------------------------------
+Anzahl Read-Aufrufe: 8.007, gelesene Zeichen gesamt: 79.243.444 (~19.810.861 Tokens)
+Anteil aus Ergebnissen > 300 Zeilen: 27.3% (21.670.369 Zeichen)
+Anteil aus Ergebnissen > 400 Zeilen: 19.0% (15.095.512 Zeichen)
+Anteil aus Ergebnissen > 800 Zeilen: 5.2% (4.143.206 Zeichen)
+Voll-Reads: 5.949 (74.3%), Teil-Reads (offset/limit): 2.058 (25.7%)
+  Zeichen aus Voll-Reads: 63.704.896  |  Zeichen aus Teil-Reads: 15.538.548
+Anteil Zeichen aus wiederholten Reads derselben Datei im selben Transkript: 13.9% (11.027.474 Zeichen)
+
+Verteilung nach Dateiendung:
+Endung       Anzahl        Zeichen      ~Tokens   Anteil
+.md            6145     63.656.836   15.914.209    80.3%
+sonstige        717      6.920.424    1.730.106     8.7%
+.js             636      3.827.230      956.808     4.8%
+.py             326      3.506.422      876.606     4.4%
+.css             64        538.732      134.683     0.7%
+.json            66        424.959      106.240     0.5%
+.html            53        368.841       92.210     0.5%
+
+Top-20 gelesene Dateien nach Zeichensumme:
+  #  Reads      Zeichen    ~Tokens  Pfad
+  1     76    1.559.665    389.916  c:\github\projekte\plan legacy code migration\_test-workspace\_meta\testplan-ab-2026-08-13.md
+  2     60    1.393.455    348.364  c:\github\projekte\plan legacy code migration\.claude\worktrees\ftth-fttc-clarification-0fd2fc\prompts\fachmodul.prompt.md
+  3     79      980.557    245.139  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\konfigurator.jsx
+  4     35      968.505    242.126  c:\github\projekte\plan legacy code migration\.claude\worktrees\obsidian-vault-colors-43a506\prompts\fachmodul.prompt.md
+  5     55      941.189    235.297  c:\github\projekte\bastis obsidian vault\bastis schatz\index.md
+  6     61      925.484    231.371  c:\github\projekte\plan legacy code migration\_test-workspace\_meta\testplan-2026-08-14-to-requirements.md
+  7     54      914.279    228.570  c:\github\projekte\bastis obsidian vault\bastis schatz\log.md
+  8     47      913.175    228.294  c:\github\projekte\plan legacy code migration\.claude\worktrees\fachmodul-prompt-optimization-e14182\50-fachmodul-neema\fachmodul-neema.md
+  9     62      868.561    217.140  c:\github\projekte\plan legacy code migration\_test-workspace\_meta\testplan-2026-08-13.md
+ 10     30      812.334    203.084  c:\github\projekte\plan legacy code migration\test\60-fachmodul-ema\fachmodul-ema.md
+ 11     22      646.816    161.704  c:\github\projekte\plan legacy code migration\prompts\grill-neuentwurf.prompt.md
+ 12     15      620.990    155.248  c:\github\projekte\plan legacy code migration\test\context.md
+ 13     29      606.139    151.535  c:\github\projekte\plan legacy code migration\prompts\grill-fachinput.prompt.md
+ 14     23      602.952    150.738  c:\github\projekte\plan legacy code migration\prompts\grill-integration.prompt.md
+ 15     25      593.151    148.288  c:\github\projekte\plan legacy code migration\.claude\worktrees\fachmodul-prompt-optimization-e14182\spec-fachmodul-gpt.md
+ 16     33      503.170    125.792  c:\github\projekte\plan legacy code migration\copilot-instructions.md
+ 17     25      502.461    125.615  c:\users\szieg\appdata\local\temp\claude\g--meine-ablage-projekte-wlh-preiskalkulation--claude-worktrees-haus-preiskalkulator-b71e79\817aab3d-2aa8-4f24-ac6e-e04b9ded5e3a\scratchpad\stack.diff
+ 18     15      477.559    119.390  c:\users\szieg\appdata\local\temp\triage-test\t5\40-requirements\_open-items.md
+ 19     22      472.088    118.022  c:\github\projekte\plan legacy code migration\.claude\worktrees\fachmodul-prompt-optimization-e14182\.github\prompts\fachmodul.prompt.md
+ 20     14      446.718    111.680  c:\github\projekte\plan legacy code migration\test\31-deep-modul\_feldabgleich-gv04_1-emt-001.md
+
+------------------------------------------------------------------------------
+ABSCHNITT C -- Kommandoausgaben Bash/PowerShell (SUBAGENT)
+------------------------------------------------------------------------------
+Anzahl Aufrufe: 13.485
+Ausgabegroesse: Median 688 Zeichen, p90 6.070 Zeichen, Maximum 29.393 Zeichen
+Anteil Ausgaben > 10.000 Zeichen an Gesamtsumme: 34.0% (9.918.198 Zeichen)
+Anteil Ausgaben > 50.000 Zeichen an Gesamtsumme: 0.0% (0 Zeichen)
+
+Top-20 Kommandos nach Ausgabegroesse:
+  # Tool            Zeichen Datum         Kommando (<=80 Zeichen)
+  1 Bash             29.393 2026-09-03    python3 - <<'EOF' import json recs = json.load(open(r'C:\GitHub\Projekte\researc
+  2 Bash             29.359 2026-09-08    export PYTHONIOENCODING=utf-8; cd "C:/Users/szieg/AppData/Local/Temp/skillspecto
+  3 Bash             29.162 2026-08-14    powershell -Command "Get-ChildItem -Path 'C:\GitHub\Projekte\Plan Legacy code Mi
+  4 PowerShell       28.731 2026-08-13    $a="C:\GitHub\Projekte\Plan Legacy code Migration\_test-workspace\_meta\laeufe\A
+  5 Bash             28.637 2026-08-27    cd "C:\GitHub\Projekte\Plan Legacy code Migration" && grep -rn "CONTEXT.md" prom
+  6 Bash             28.548 2026-08-28    cd "C:\GitHub\Projekte\Plan Legacy code Migration" && git status --short && echo
+  7 Bash             28.472 2026-08-19    cd "C:/GitHub/Projekte/Plan Legacy code Migration/.claude/worktrees/grill-konfig
+  8 Bash             28.332 2026-09-03    python3 - <<'EOF' import json recs = json.load(open(r'C:\GitHub\Projekte\researc
+  9 Bash             28.316 2026-09-04    cat "C:\GitHub\Projekte\Bastis Obsidian Vault\Bastis Schatz\index.md"
+ 10 Bash             27.780 2026-09-13    cd "C:\GitHub\Projekte\wlh-preiskalkulation-app" && cat src/vergleich/vergleich.
+ 11 Bash             27.383 2026-09-12    cd "C:/GitHub/Projekte/wlh-preiskalkulation-app" && ls tools/ && echo "=====LEAK
+ 12 Bash             27.146 2026-08-08    cd "C:\GitHub\Projekte\Repo SA-Analyse" && grep -nrIE "00_Projekt|01_Input|02_Pr
+ 13 Bash             26.968 2026-09-09    cd "C:\GitHub\Projekte\Plan Legacy code Migration\.claude\worktrees\fachmodul-pr
+ 14 Bash             26.827 2026-09-05    cd "C:\GitHub\Projekte\fdh-wt-liga" && echo "--- draft_feed_espn.py ---" && cat 
+ 15 Bash             26.758 2026-09-02    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\szieg\AppData\
+ 16 Bash             26.744 2026-09-10    cd "C:\GitHub\Projekte\Plan Legacy code Migration\.claude\worktrees\fachmodul-pr
+ 17 Bash             26.678 2026-09-03    python3 - <<'EOF' import json recs = json.load(open(r'C:\GitHub\Projekte\researc
+ 18 Bash             26.677 2026-09-04    cat -n cockpit.html
+ 19 Bash             26.608 2026-09-14    cd "C:\GitHub\Projekte\Bastis Obsidian Vault\Bastis Schatz" && echo "=== log.md 
+ 20 Bash             26.201 2026-08-21    for f in "Permission mode.md" "Permission request.md" "Memory system.md" "AGENTS
+
+------------------------------------------------------------------------------
+ABSCHNITT D -- Hook-Rueckmeldungen (SUBAGENT)
+------------------------------------------------------------------------------
+Hook                 Anzahl      Zeichen    ~Tokens   Groesste  Nachrichtenart (Anzahl)
+read_gate               103       80.161     20.040      1.200  tool_result:101, assistant_text:2
+eslint                   29       56.067     14.017      6.000  tool_result:28, user_text:1
+guardrail_block          75       54.837     13.709      1.200  tool_result:74, assistant_text:1
+agent_gate               60       52.796     13.199      1.200  tool_result:57, assistant_text:2, user_text:1
+check_eol                55       50.283     12.571      1.200  tool_result:53, user_text:1, assistant_text:1
+guardrail_no_jq          11        8.232      2.058      1.200  tool_result:9, assistant_text:1, user_text:1
+
+ESLint-Meldungsgroesse: n=29, Median 921 Zeichen, p90 4.962 Zeichen, Max 6.000 Zeichen
+  Hinweis: Erfassung pro Fund ist bei 6.000 Zeichen gedeckelt (Naeherung fuer lange, nicht durch Leerzeile abgesetzte Ausgaben); 2 von 29 Funden treffen die Kappung exakt und sind in der Realitaet ggf. laenger.
+
+==============================================================================
+ABSCHNITT A -- Kontextfueller je Kategorie (HAUPTSESSION)
+==============================================================================
+Gesamtzeichen aller content-Bloecke (Summenprobe-Basis): 125.546.708 (~31.386.677 Tokens)
+Summe der 4 Kategorien:                                  67.792.489 (~16.948.122 Tokens)
+Abweichung gesamt: 46.00% (je Transkript: Median 0.03%, p90 45.00%, Max 98.66%)
+  -> ueber 5%: Ursache sind nicht-textuelle Bloecke (v. a. Bilder, z. B. Screenshots) in tool_result, die in die Summenprobe (raw, als JSON-Groesse inkl. Base64) aber nicht in die 4 Kategorien (nur Text) einfliessen. Groesste Quellen hier: mcp__claude-in-chrome 33.429.882 Zeichen, Read 12.922.041 Zeichen, mcp__Claude_Browser 1.857.703 Zeichen. Direkt im Content liegende Bild-/Dokument-Bloecke (ausserhalb tool_result): 9.030.595 Zeichen.
+
+Kategorie              Summe Zeichen      ~Tokens      Anteil   Median/Datei(%)  p90/Datei(%)
+1. tool_result (gesamt)        29.786.798    7.446.700      43.9%           39.9          66.4
+2. Assistant-Text+Thinking      9.516.463    2.379.116      14.0%           11.3          26.2
+3. Tool-Use-Inputs             15.131.539    3.782.885      22.3%           18.0          32.5
+4. User-Text                   13.357.689    3.339.422      19.7%           13.3          59.5
+
+tool_result nach Tool (Top 15 nach Zeichen):
+Tool                                Zeichen      ~Tokens  Anteil an tool_result
+Read                             13.349.214    3.337.304                  44.8%
+Bash                              9.240.249    2.310.062                  31.0%
+Agent                             1.401.610      350.402                   4.7%
+mcp__claude-in-chrome             1.030.758      257.690                   3.5%
+Grep                                848.454      212.114                   2.8%
+mcp__58ac9104-b3de-4938-9b7f-6bb4c03ae26d        823.955      205.989                   2.8%
+PowerShell                          728.032      182.008                   2.4%
+Edit                                457.445      114.361                   1.5%
+mcp__Claude_Browser                 361.337       90.334                   1.2%
+sonstige                            281.830       70.458                   0.9%
+Glob                                205.134       51.284                   0.7%
+WebSearch                           136.400       34.100                   0.5%
+mcp__visualize                      130.437       32.609                   0.4%
+WebFetch                            126.554       31.638                   0.4%
+mcp__Claude_Preview                 123.158       30.790                   0.4%
+
+------------------------------------------------------------------------------
+ABSCHNITT B -- Read-Tiefe (HAUPTSESSION)
+------------------------------------------------------------------------------
+Anzahl Read-Aufrufe: 1.754, gelesene Zeichen gesamt: 13.349.214 (~3.337.304 Tokens)
+Anteil aus Ergebnissen > 300 Zeilen: 23.3% (3.112.941 Zeichen)
+Anteil aus Ergebnissen > 400 Zeilen: 12.7% (1.689.517 Zeichen)
+Anteil aus Ergebnissen > 800 Zeilen: 2.7% (360.353 Zeichen)
+Voll-Reads: 1.324 (75.5%), Teil-Reads (offset/limit): 430 (24.5%)
+  Zeichen aus Voll-Reads: 10.594.042  |  Zeichen aus Teil-Reads: 2.755.172
+Anteil Zeichen aus wiederholten Reads derselben Datei im selben Transkript: 24.1% (3.215.521 Zeichen)
+
+Verteilung nach Dateiendung:
+Endung       Anzahl        Zeichen      ~Tokens   Anteil
+.md            1234     10.838.623    2.709.656    81.2%
+sonstige        268      1.450.044      362.511    10.9%
+.js             127        589.414      147.354     4.4%
+.html            22        198.195       49.549     1.5%
+.css             25        136.870       34.218     1.0%
+.json            62         80.410       20.102     0.6%
+.py              16         55.658       13.914     0.4%
+
+Top-20 gelesene Dateien nach Zeichensumme:
+  #  Reads      Zeichen    ~Tokens  Pfad
+  1     30      597.590    149.398  c:\users\szieg\.claude\projects\g--meine-ablage-projekte-wlh-preiskalkulation\memory\wlh-vollkonfigurator.md
+  2     47      461.953    115.488  c:\github\projekte\bastis obsidian vault\bastis schatz\index.md
+  3     34      459.788    114.947  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\konfigurator.jsx
+  4     32      301.181     75.295  c:\github\projekte\wlh-preiskalkulation-app\claude.md
+  5     24      296.926     74.232  c:\github\projekte\plan legacy code migration\.claude\worktrees\ftth-fttc-clarification-0fd2fc\prompts\fachmodul.prompt.md
+  6     13      293.285     73.321  c:\github\projekte\plan legacy code migration\prompts\grill-fachinput.prompt.md
+  7     17      272.830     68.208  c:\github\projekte\plan legacy code migration\copilot-instructions.md
+  8     14      219.404     54.851  c:\github\projekte\plan legacy code migration\.claude\worktrees\obsidian-vault-colors-43a506\prompts\fachmodul.prompt.md
+  9     13      176.672     44.168  c:\github\projekte\plan legacy code migration\prompts\prozessvorschlag.prompt.md
+ 10     16      170.552     42.638  c:\github\projekte\plan legacy code migration\prompts\to-requirements.prompt.md
+ 11      4      168.408     42.102  c:\users\szieg\.claude\skills\graphify\skill.md
+ 12     14      135.005     33.751  c:\github\projekte\wlh-preiskalkulation-app\tickets.md
+ 13     12      134.179     33.545  c:\github\projekte\plan legacy code migration\prompts\grill-soll.prompt.md
+ 14      7      129.309     32.327  c:\github\projekte\plan legacy code migration\_test-workspace\_meta\testplan-2026-08-13.md
+ 15     13      127.179     31.795  c:\users\szieg\.claude\skills\graphify\references\update.md
+ 16      3      121.656     30.414  c:\github\projekte\plan legacy code migration\.claude\worktrees\ftth-fttc-clarification-0fd2fc\test\50-fachmodul-neema\fachmodul-neema.md
+ 17      6      117.798     29.450  c:\github\projekte\plan legacy code migration\prompts\soll-nachtrag.prompt.md
+ 18      6      114.733     28.683  c:\github\projekte\plan legacy code migration\prompts\grill-integration.prompt.md
+ 19      7      111.392     27.848  c:\github\projekte\plan legacy code migration\prompts\prozessvorschlag-approved.prompt.md
+ 20      7      110.737     27.684  c:\github\projekte\plan legacy code migration\prompts\fachmodul.prompt.md
+
+------------------------------------------------------------------------------
+ABSCHNITT C -- Kommandoausgaben Bash/PowerShell (HAUPTSESSION)
+------------------------------------------------------------------------------
+Anzahl Aufrufe: 4.550
+Ausgabegroesse: Median 718 Zeichen, p90 6.223 Zeichen, Maximum 29.182 Zeichen
+Anteil Ausgaben > 10.000 Zeichen an Gesamtsumme: 34.2% (3.411.230 Zeichen)
+Anteil Ausgaben > 50.000 Zeichen an Gesamtsumme: 0.0% (0 Zeichen)
+
+Top-20 Kommandos nach Ausgabegroesse:
+  # Tool            Zeichen Datum         Kommando (<=80 Zeichen)
+  1 Bash             29.182 2026-09-07    cd "/c/GitHub/Projekte/fantasy-draft-helper" && git status --short && git diff -
+  2 Bash             29.142 2026-09-13    cd "C:/GitHub/Projekte/Claude_global_setup/.claude/worktrees/global-setup-audit-
+  3 Bash             28.697 2026-09-07    cd /c/GitHub/Projekte/wlh-preiskalkulation-app && git status --short && wc -l do
+  4 PowerShell       28.408 2026-08-13    git -C "C:\GitHub\Projekte\Plan Legacy code Migration" diff -- prompts/_shared/k
+  5 Bash             28.020 2026-09-07    cd "C:/GitHub/Projekte/wlh-preiskalkulation-app" && echo "=== tickets.md (rest) 
+  6 Bash             27.922 2026-09-06    sed -n '416,790p' "C:/GitHub/Projekte/Plan Legacy code Migration/Test/60-fachmod
+  7 Bash             27.806 2026-09-07    cd "C:/GitHub/Projekte/wlh-preiskalkulation-app" && echo "=== Kundenansicht.jsx 
+  8 PowerShell       27.680 2026-09-06    $env:PYTHONIOENCODING = "utf-8"; $py = (Get-Content "C:\GitHub\Projekte\Bastis O
+  9 Bash             27.486 2026-09-02    cd "C:/GitHub/Projekte/Plan Legacy code Migration/.claude/worktrees/sleepy-burne
+ 10 Bash             27.061 2026-09-13    cd "C:/GitHub/Projekte/Claude_global_setup/.claude/worktrees/global-setup-audit-
+ 11 Bash             27.007 2026-09-13    git diff -- src/konfigurator/Konfigurator.jsx src/konfigurator/Standansicht.jsx 
+ 12 Bash             26.985 2026-09-12    cd "C:\GitHub\Projekte\wlh-preiskalkulation-app" && sed -n '1,9p;408,460p' ticke
+ 13 Bash             26.265 2026-09-07    echo "=====CONTEXT.md=====" && cat CONTEXT.md && echo && echo "=====ADRs=====" &
+ 14 PowerShell       25.810 2026-08-13    git -C "C:\GitHub\Projekte\Plan Legacy code Migration" diff -- prompts/grill-int
+ 15 Bash             25.706 2026-09-09    cd "C:\GitHub\Projekte\Plan Legacy code Migration\.claude\worktrees\fachmodul-pr
+ 16 Bash             25.569 2026-07-10    cd "C:/GitHub/Projekte/wlh-preiskalkulation-app/Excel preisliste" && grep -c '^|
+ 17 Bash             25.278 2026-09-18    R="/c/GitHub/Projekte/wlh-preiskalkulation-app" wc -l "$R/docs/stand-historie.md
+ 18 Bash             25.033 2026-09-03    cd "C:/GitHub/Projekte/Bastis Obsidian Vault/Bastis Schatz" && echo "=== CLAUDE.
+ 19 Bash             24.301 2026-09-03    wc -l "C:/GitHub/Projekte/research/fable-5-1-prompting-und-systemprompt-auswertu
+ 20 Bash             24.118 2026-09-09    cd "C:\GitHub\Projekte\Plan Legacy code Migration\.claude\worktrees\fachmodul-pr
+
+------------------------------------------------------------------------------
+ABSCHNITT D -- Hook-Rueckmeldungen (HAUPTSESSION)
+------------------------------------------------------------------------------
+Hook                 Anzahl      Zeichen    ~Tokens   Groesste  Nachrichtenart (Anzahl)
+read_gate                25       11.234      2.808      1.200  tool_result:23, user_text:2
+guardrail_block          20        7.662      1.916      1.200  tool_result:19, user_text:1
+agent_gate               12        4.891      1.223        900  tool_result:10, user_text:2
+eslint                    4        3.322        830      2.922  tool_result:4
+check_eol                 4        2.250        562      1.200  tool_result:3, user_text:1
+guardrail_no_jq           4        1.986        496      1.200  tool_result:3, user_text:1
+
+ESLint-Meldungsgroesse: n=4, Median 162 Zeichen, p90 2.922 Zeichen, Max 2.922 Zeichen
+
+==============================================================================
+ABSCHNITT E -- Je Projekt (Subagent-Laeufe)
+==============================================================================
+Endkontext ueber ALLE 894 Subagent-Transkripte (exakte Tokens aus usage): Median 137.026, p90 253.180, Max 712.673.
+(Referenzwerte aus dem Auftrag: Median ~131K, Spitzen 300K-700K -- deckt sich mit diesem Lauf.)
+
+Projekt                                        Laeufe  Median-Endktx(~Tok)  tool_res%  ass_text%  tool_use%  user_text%
+Plan Legacy code Migration                        310              144.861      74.6%       7.6%      14.6%        3.1%
+Pv-Anlage-Konvo                                   206              138.702      58.9%      19.9%      17.6%        3.5%
+WlH Preiskalkulation                               77              110.973      73.5%       7.0%      15.1%        4.4%
+fantasy-draft-helper                               76              132.288      67.5%       3.8%      25.0%        3.8%
+wlh-preiskalkulation-app                           61              173.652      70.8%       6.3%      19.7%        3.2%
+
+(Projekte insgesamt mit Subagent-Laeufen im Zeitraum: 25. Projekt-Schluessel = Ordnername aus dem cwd-Feld, Worktree-Suffix '\.claude\worktrees\<name>' abgeschnitten.)
+
+==============================================================================
+ABSCHNITT F -- Grosse Kontexte (Subagent-Transkripte > 300K Tokens Endkontext)
+==============================================================================
+Anzahl: 55
+Datum        Projekt                                 Endktx(~Tok)  Turns  Top-3-Kategorien (Anteil)
+2026-09-10   Plan Legacy code Migration                   712.673     86  tool_result:Read 66%; tool_use_input 25%; tool_result:Bash 4%
+2026-08-19   Plan Legacy code Migration                   658.381    133  tool_result:Read 53%; tool_use_input 35%; assistant_text 9%
+2026-08-17   Plan Legacy code Migration                   585.258     76  tool_result:Read 63%; tool_use_input 17%; tool_result:Bash 9%
+2026-08-19   Plan Legacy code Migration                   463.869     29  tool_result:Read 71%; tool_use_input 17%; assistant_text 10%
+2026-08-21   Plan Legacy code Migration                   462.341     81  tool_result:Read 61%; assistant_text 16%; tool_use_input 15%
+2026-09-14   01-Prozessdiagram                            456.870    127  tool_use_input 41%; tool_result:Bash 41%; tool_result:mcp__Claude_Browser 6%
+2026-08-20   Plan Legacy code Migration                   455.526     80  tool_result:Read 55%; tool_use_input 28%; assistant_text 13%
+2026-09-10   Plan Legacy code Migration                   449.790     41  tool_result:Read 68%; tool_use_input 22%; tool_result:Bash 4%
+2026-09-18   treue                                        431.537    127  tool_use_input 51%; tool_result:Bash 35%; user_text 7%
+2026-08-17   Plan Legacy code Migration                   429.913     52  tool_result:Read 58%; tool_result:Bash 20%; assistant_text 11%
+2026-08-28   Plan Legacy code Migration                   407.915     64  tool_result:Read 72%; tool_result:Bash 15%; tool_use_input 6%
+2026-09-12   wlh-preiskalkulation-app                     404.524    128  tool_result:Bash 55%; tool_use_input 31%; tool_result:Read 8%
+2026-09-12   wlh-preiskalkulation-app                     396.418    162  tool_result:Bash 47%; tool_use_input 29%; assistant_text 20%
+2026-08-15   Pv-Anlage-Konvo                              388.047    123  tool_use_input 37%; tool_result:Read 31%; assistant_text 20%
+2026-09-18   Claude_global_setup                          385.248    178  tool_result:Bash 61%; tool_use_input 32%; tool_result:Edit 2%
+2026-09-10   Plan Legacy code Migration                   382.771     89  tool_result:Read 54%; tool_use_input 29%; tool_result:Bash 11%
+2026-08-22   Plan Legacy code Migration                   378.756     56  tool_result:Read 74%; tool_use_input 16%; tool_result:Bash 6%
+2026-09-06   fantasy-draft-helper                         376.681    223  tool_result:Bash 46%; tool_use_input 44%; tool_result:Edit 2%
+2026-09-18   Claude_global_setup                          371.733    137  tool_result:Read 49%; tool_result:Bash 24%; tool_use_input 22%
+2026-08-19   Plan Legacy code Migration                   368.357     17  tool_result:Read 85%; assistant_text 9%; tool_result:Grep 3%
+2026-08-23   research                                     368.122    112  tool_result:Read 39%; tool_use_input 22%; tool_result:mcp__Claude_Browser 21%
+2026-09-13   wlh-preiskalkulation-app                     367.188    146  tool_use_input 42%; tool_result:Read 35%; tool_result:Bash 17%
+2026-08-19   Plan Legacy code Migration                   360.841     37  tool_result:Read 79%; assistant_text 15%; tool_use_input 3%
+2026-08-19   Plan Legacy code Migration                   356.813     18  tool_result:Read 77%; assistant_text 14%; tool_use_input 8%
+2026-09-13   wlh-preiskalkulation-app                     356.345    158  tool_result:Bash 59%; tool_use_input 20%; tool_result:Read 13%
+2026-09-03   fantasy-draft-helper                         356.003    152  tool_use_input 41%; tool_result:Bash 40%; tool_result:Read 8%
+2026-08-28   Plan Legacy code Migration                   351.050     24  tool_result:Read 86%; tool_result:Bash 5%; assistant_text 4%
+2026-08-16   Plan Legacy code Migration                   349.477     34  tool_result:Read 52%; tool_use_input 27%; tool_result:Bash 7%
+2026-08-22   Plan Legacy code Migration                   344.508     37  tool_result:Read 73%; tool_use_input 19%; tool_result:Bash 4%
+2026-09-13   wlh-preiskalkulation-app                     342.595    142  tool_result:Bash 48%; tool_use_input 22%; tool_result:Read 22%
+2026-09-19   WlH Preiskalkulation                         341.415    173  tool_result:Bash 45%; tool_use_input 25%; tool_result:Read 17%
+2026-09-04   Plan Legacy code Migration                   340.722     88  tool_use_input 42%; tool_result:Read 27%; tool_result:Bash 24%
+2026-08-28   Plan Legacy code Migration                   337.670     59  tool_result:Read 41%; tool_use_input 37%; tool_result:Bash 15%
+2026-08-16   Plan Legacy code Migration                   333.976    110  tool_result:Read 50%; tool_use_input 29%; assistant_text 7%
+2026-08-16   Pv-Anlage-Konvo                              333.727     74  tool_use_input 35%; tool_result:Read 32%; assistant_text 19%
+2026-09-05   Hausbau                                      329.273     92  tool_result:Bash 47%; tool_use_input 37%; tool_result:mcp__Claude_Browser 12%
+2026-08-14   IIBA CBAP                                    327.373    106  tool_result:Read 41%; tool_use_input 24%; assistant_text 17%
+2026-08-19   Plan Legacy code Migration                   322.423     51  tool_result:Read 63%; assistant_text 17%; tool_result:Bash 13%
+2026-08-13   Pv-Anlage-Konvo                              319.545     15  tool_result:Read 61%; tool_result:Grep 21%; tool_use_input 13%
+2026-09-18   Claude_global_setup                          318.738    127  tool_result:Bash 71%; tool_use_input 23%; assistant_text 2%
+2026-08-21   Plan Legacy code Migration                   318.178     26  tool_result:Read 68%; assistant_text 14%; tool_use_input 10%
+2026-08-19   Plan Legacy code Migration                   317.941     70  tool_result:Read 32%; tool_result:Bash 28%; tool_use_input 24%
+2026-09-13   wlh-preiskalkulation-app                     317.882     84  tool_result:Bash 62%; tool_use_input 18%; tool_result:Read 15%
+2026-08-12   Pv-Anlage-Konvo                              315.924     49  assistant_text 52%; tool_result:Read 26%; tool_use_input 14%
+2026-09-19   WlH Preiskalkulation                         315.180     91  tool_result:Bash 71%; tool_use_input 19%; user_text 6%
+2026-09-13   wlh-preiskalkulation-app                     313.399     97  tool_result:Read 44%; tool_use_input 26%; tool_result:Bash 24%
+2026-09-18   Claude_global_setup                          311.611    113  tool_use_input 49%; tool_result:Bash 35%; user_text 7%
+2026-09-01   Plan Legacy code Migration                   311.285     67  tool_result:WebSearch 42%; tool_result:mcp__Claude_Browser 28%; tool_use_input 15%
+2026-09-04   fantasy-draft-helper                         310.329     60  tool_result:Read 49%; tool_result:Bash 27%; tool_use_input 20%
+2026-08-14   Pv-Anlage-Konvo                              307.664     90  tool_use_input 47%; tool_result:Read 26%; tool_result:PowerShell 11%
+2026-09-03   Plan Legacy code Migration                   306.709     84  tool_result:Bash 49%; tool_use_input 44%; tool_result:WebSearch 5%
+2026-08-21   Plan Legacy code Migration                   306.232     26  tool_result:Read 64%; tool_result:Grep 17%; assistant_text 11%
+2026-08-22   Plan Legacy code Migration                   306.044     25  tool_result:Read 81%; tool_use_input 13%; tool_result:Bash 4%
+2026-09-13   Claude_global_setup                          305.694     66  tool_result:Bash 34%; tool_use_input 32%; tool_result:Grep 18%
+2026-08-22   Plan Legacy code Migration                   304.553     70  tool_use_input 43%; tool_result:Read 36%; tool_result:Bash 12%
+
+Dominante Kategorie (haeufigste Top-1-Kategorie in dieser Gruppe): tool_result:Read in 30 von 55 Transkripten (55%).
+
+==============================================================================
+ABSCHNITT G -- Hebel-Kennzahlen fuer Token-Spar-Policies (Subagent-Transkripte)
+==============================================================================
+Basis: 897 Subagent-Transkripte. Alle Kennzahlen G1-G6 gelten nur fuer Subagent-Transkripte. G1-Verbrauchswerte sind exakte Tokens aus den usage-Feldern (wie Endkontext in E/F), alle anderen Zeichen-Werte in G sind Roh-Zeichen (Naeherung Zeichen/4 fuer ~Tokens, sofern angegeben).
+
+------------------------------------------------------------------------------
+G1 -- Anteil grosser Laeufe am Gesamtverbrauch
+------------------------------------------------------------------------------
+Gesamt-Input-Verbrauch ueber alle 897 Subagent-Transkripte (Summe input_tokens+cache_read+cache_creation ueber ALLE Assistant-Turns, exakt): 3.533.331.957 Tokens, davon Cache-Writes (cache_creation_input_tokens): 180.118.221 Tokens.
+Endkontext     Anzahl  Anteil Transkr.  Anteil Input-Verbr.  Anteil Cache-Writes
+> 150K            383            42.7%                78.5%                68.5%
+> 200K            192            21.4%                59.2%                46.4%
+> 300K             55             6.1%                33.2%                21.7%
+
+------------------------------------------------------------------------------
+G2 -- Tool-Use-Inputs nach Tool
+------------------------------------------------------------------------------
+Tool                  Zeichen      ~Tokens   Anteil
+Write              13.330.996    3.332.749    44.0%
+Edit                7.023.003    1.755.751    23.2%
+MultiEdit                   0            0     0.0%
+Bash                7.011.974    1.752.994    23.1%
+PowerShell            313.883       78.471     1.0%
+Agent                 598.076      149.519     2.0%
+SendMessage            12.484        3.121     0.0%
+sonstige            1.999.074      499.768     6.6%
+Summe              30.289.490    7.572.372   100.0%
+Summenprobe: Gesamt-Tool-Use-Inputs aus Abschnitt A (Subagent) = 30.289.490 Zeichen; Differenz zur G2-Summe: 0 Zeichen.
+
+Write: 1.389 Aufrufe, Median content-Laenge 3.504 Zeichen, p90 25.497 Zeichen.
+  Anteil Writes > 10.000 Zeichen an Summe content-Zeichen (12.681.122): 74.4% (9.433.854 Zeichen)
+Edit: 4.487 Aufrufe, Median new_string-Laenge 429 Zeichen.
+Zweit-Writes (2. und weitere Writes derselben Datei im selben Transkript): 37 Aufrufe, 240.804 Zeichen.
+
+------------------------------------------------------------------------------
+G3 -- Dateigroesse nur bei Code-Reads (.js .jsx .mjs .cjs .ts .tsx .py .css .html .json)
+------------------------------------------------------------------------------
+[Alle Subagent-Transkripte]
+  Code-Reads: 1.467 Aufrufe, 11.133.772 Zeichen (14.1% aller Read-Zeichen in diesem Bereich)
+  davon > 300 Zeilen: 49.5% (5.506.911 Zeichen)
+  davon > 400 Zeilen: 37.2% (4.141.357 Zeichen)
+  davon > 800 Zeilen: 13.1% (1.459.576 Zeichen)
+  Voll-Reads: 974 (9.435.829 Zeichen)  |  Teil-Reads: 493 (1.697.943 Zeichen)
+  Top-10 Code-Dateien nach Zeichensumme:
+    #  Reads    Zeichen  Pfad
+    1     79    980.557  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\konfigurator.jsx
+    2     38    362.425  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\konfigurator.css
+    3     12    275.685  c:\github\projekte\wlh-preiskalkulation-app\tools\extrahiere_bemusterung.py
+    4     19    225.453  c:\github\projekte\wlh-preiskalkulation-app\src\kundenansicht\kundenansicht.jsx
+    5     22    223.092  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\vergleich.jsx
+    6     28    217.206  c:\github\projekte\wlh-preiskalkulation-app\src\rechenkern\katalog.js
+    7     20    215.021  c:\github\projekte\wlh-preiskalkulation-app\src\kundenansicht\kundenansicht.test.jsx
+    8     25    181.669  c:\github\projekte\fantasy-draft-helper\empfehlung.py
+    9     16    180.778  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\orchestrierung.js
+   10     26    169.519  c:\github\projekte\wlh-preiskalkulation-app\src\rechenkern\optionen.js
+
+[Projekt: wlh-preiskalkulation-app]
+  Code-Reads: 467 Aufrufe, 3.106.696 Zeichen (61.7% aller Read-Zeichen in diesem Bereich)
+  davon > 300 Zeilen: 31.7% (983.959 Zeichen)
+  davon > 400 Zeilen: 18.2% (566.581 Zeichen)
+  davon > 800 Zeilen: 2.9% (89.424 Zeichen)
+  Voll-Reads: 374 (2.835.481 Zeichen)  |  Teil-Reads: 93 (271.215 Zeichen)
+  Top-10 Code-Dateien nach Zeichensumme:
+    #  Reads    Zeichen  Pfad
+    1     13    187.015  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\konfigurator.jsx
+    2      9    132.395  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\orchestrierung.js
+    3     10    110.596  c:\github\projekte\wlh-preiskalkulation-app\src\szenarien\sicherung.js
+    4      6     94.844  c:\github\projekte\wlh-preiskalkulation-app\src\konfigurator\vergleich.jsx
+    5      5     92.722  c:\github\projekte\wlh-preiskalkulation-app\src\import\raster.js
+    6     10     72.474  c:\github\projekte\wlh-preiskalkulation-app\src\projekte\speicher.js
+    7      3     72.165  c:\github\projekte\wlh-preiskalkulation-app\.claude\worktrees\projektubersicht-einstieg-b2cda0\worker\datenhalter.js
+    8      8     69.223  c:\github\projekte\wlh-preiskalkulation-app\tools\seed-lokal.mjs
+    9      3     66.757  c:\github\projekte\wlh-preiskalkulation-app\src\kundenansicht\kundenansicht.jsx
+   10      8     65.792  c:\github\projekte\wlh-preiskalkulation-app\src\rechenkern\katalog.js
+
+[Projekt: fantasy-draft-helper]
+  Code-Reads: 236 Aufrufe, 2.206.526 Zeichen (50.9% aller Read-Zeichen in diesem Bereich)
+  davon > 300 Zeilen: 66.0% (1.455.892 Zeichen)
+  davon > 400 Zeilen: 55.4% (1.221.752 Zeichen)
+  davon > 800 Zeilen: 27.5% (607.140 Zeichen)
+  Voll-Reads: 88 (1.585.723 Zeichen)  |  Teil-Reads: 148 (620.803 Zeichen)
+  Top-10 Code-Dateien nach Zeichensumme:
+    #  Reads    Zeichen  Pfad
+    1     22    167.536  c:\github\projekte\fantasy-draft-helper\empfehlung.py
+    2     16    131.657  c:\github\projekte\fantasy-draft-helper\tests\test_empfehlung.py
+    3      5    117.847  c:\github\projekte\fantasy-draft-helper\simulation.py
+    4      9    115.547  c:\github\projekte\fantasy-draft-helper\cockpit.py
+    5      2    108.476  c:\github\projekte\fdh-wt-t13\empfehlung.py
+    6      4     84.616  c:\github\projekte\fantasy-draft-helper\draft_feed_espn.py
+    7      2     76.608  c:\github\projekte\fdh-wt-t13\nebenbedingungen.py
+    8      4     72.601  c:\github\projekte\fantasy-draft-helper\tests\test_simulation.py
+    9      7     72.123  c:\github\projekte\fantasy-draft-helper\draft_feed_manuell.py
+   10      7     58.355  c:\github\projekte\fantasy-draft-helper\.claude\worktrees\agent-af9aa32d69b5ff5f9\cockpit.py
+
+------------------------------------------------------------------------------
+G4 -- Bash-Ausgaben nach Kommandoklasse
+------------------------------------------------------------------------------
+Klasse             Anzahl        Zeichen   Anteil     Median        p90
+tests                 495        810.290     2.8%        741      3.933
+build                  36         31.842     0.1%        604      1.602
+datei-lesen          5322     18.491.886    63.5%      1.834      9.364
+git                  1274      2.309.546     7.9%        512      4.815
+suche                3083      3.501.162    12.0%        398      2.559
+python-inline        1178      1.077.287     3.7%        240      1.992
+sonstige             2097      2.912.310    10.0%        401      3.500
+Summe                         29.134.323   100.0%
+Summenprobe: Bash+PowerShell-Zeichen aus Abschnitt A/C (Subagent) = 29.134.323 Zeichen; Differenz: 0 Zeichen.
+Zusatz 'datei-lesen': 5.322 Aufrufe insgesamt, davon 865 mit Junk-Segment oder .log-Endung im Kommandotext.
+
+------------------------------------------------------------------------------
+G5 -- Je Projekt: Read und Bash
+------------------------------------------------------------------------------
+[Plan Legacy code Migration]  (310 Laeufe)
+  Read gesamt: 35.250.091 Zeichen
+    .md:        33.840.784 Zeichen (96.0%)
+    Code:          425.280 Zeichen (1.2%)
+    sonstige:      984.027 Zeichen (2.8%)
+  Bash/PowerShell-Ausgaben gesamt: 8.003.026 Zeichen
+    tests               1 Aufrufe            89 Zeichen  (0.0%)
+    datei-lesen      1369 Aufrufe     4.784.665 Zeichen  (59.8%)
+    git               350 Aufrufe       753.378 Zeichen  (9.4%)
+    suche            1163 Aufrufe     1.633.869 Zeichen  (20.4%)
+    python-inline     189 Aufrufe       258.778 Zeichen  (3.2%)
+    sonstige          464 Aufrufe       572.247 Zeichen  (7.2%)
+
+[wlh-preiskalkulation-app]  (61 Laeufe)
+  Read gesamt: 5.031.773 Zeichen
+    .md:         1.347.634 Zeichen (26.8%)
+    Code:        3.106.696 Zeichen (61.7%)
+    sonstige:      577.443 Zeichen (11.5%)
+  Bash/PowerShell-Ausgaben gesamt: 5.465.749 Zeichen
+    tests             236 Aufrufe       472.560 Zeichen  (8.6%)
+    build              26 Aufrufe        23.913 Zeichen  (0.4%)
+    datei-lesen      1092 Aufrufe     4.198.208 Zeichen  (76.8%)
+    git               236 Aufrufe       279.513 Zeichen  (5.1%)
+    suche             318 Aufrufe       264.398 Zeichen  (4.8%)
+    python-inline      96 Aufrufe        66.312 Zeichen  (1.2%)
+    sonstige          187 Aufrufe       160.845 Zeichen  (2.9%)
+
+[WlH Preiskalkulation]  (77 Laeufe)
+  Read gesamt: 6.017.920 Zeichen
+    .md:           661.537 Zeichen (11.0%)
+    Code:        3.918.188 Zeichen (65.1%)
+    sonstige:    1.438.195 Zeichen (23.9%)
+  Bash/PowerShell-Ausgaben gesamt: 1.611.450 Zeichen
+    tests              71 Aufrufe       138.617 Zeichen  (8.6%)
+    build               7 Aufrufe         5.693 Zeichen  (0.4%)
+    datei-lesen       301 Aufrufe       724.140 Zeichen  (44.9%)
+    git               154 Aufrufe       260.461 Zeichen  (16.2%)
+    suche             186 Aufrufe        85.965 Zeichen  (5.3%)
+    python-inline      19 Aufrufe        51.698 Zeichen  (3.2%)
+    sonstige          203 Aufrufe       344.876 Zeichen  (21.4%)
+
+[fantasy-draft-helper]  (76 Laeufe)
+  Read gesamt: 4.334.713 Zeichen
+    .md:         1.757.311 Zeichen (40.5%)
+    Code:        2.206.526 Zeichen (50.9%)
+    sonstige:      370.876 Zeichen (8.6%)
+  Bash/PowerShell-Ausgaben gesamt: 4.799.505 Zeichen
+    tests             103 Aufrufe        89.045 Zeichen  (1.9%)
+    datei-lesen      1042 Aufrufe     3.444.491 Zeichen  (71.8%)
+    git               218 Aufrufe       393.525 Zeichen  (8.2%)
+    suche             354 Aufrufe       336.827 Zeichen  (7.0%)
+    python-inline     453 Aufrufe       321.753 Zeichen  (6.7%)
+    sonstige          135 Aufrufe       213.864 Zeichen  (4.5%)
+
+------------------------------------------------------------------------------
+G6 -- Hook-Ausgabe ohne Kappung (ESLint) und Junk-Pfade Read vs. Bash
+------------------------------------------------------------------------------
+ESLint mit 60.000-Zeichen-Kappung (statt 6.000 in Abschnitt D): n=29, Median 921 Zeichen, p90 4.962 Zeichen, echtes Maximum 40.036 Zeichen, Summe 93.174 Zeichen.
+  (Zum Vergleich Abschnitt D, 6.000-Cap: n=29 Funde.)
+
+Junk-/.log-Pfade (.git, .wrangler, __pycache__, build, coverage, dist, graphify-out, node_modules, oder .log-Endung):
+  Read-Tool: 64 Aufrufe auf solche Pfade (das sieht der read-gate-Hook).
+  Bash 'datei-lesen': 865 Aufrufe auf solche Pfade (am read-gate-Hook vorbei, da kein Read-Tool-Aufruf).
+
+==============================================================================
+ENDE DES REPORTS
+==============================================================================

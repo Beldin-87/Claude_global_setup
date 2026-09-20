@@ -48,7 +48,7 @@ Alt (Zeile 31):
 Neu (Zeile 31):
 > 1. `index.md` Katalog: per grep nach dem Projektpräfix befragen, nie ganz laden (Beispiel: `grep -i "^wlh-" index.md` für das Projekt `wlh`).
 
-Gemessen: 55 Voll-Reads von `index.md` mit zusammen 941K Zeichen in 60 Tagen; die Datei ist heute
+Gemessen: 55 Reads von `index.md` mit zusammen 941K Zeichen in 60 Tagen; die Datei ist heute
 49 KB groß, ein Voll-Read kostet damit rund 12K Tokens.
 
 Verifier (Sonnet): erste Fassung mit vier Funden — Widerspruch zwischen „nie lesen“ (Grundwissen)
@@ -71,6 +71,8 @@ Neu:
 > - Query: index.md per grep nach dem Projektpräfix befragen, passende Seite finden, Antwort mit Quellenbezug geben.
 
 Archivkopie: `archiv/2026-09-20-token-spar-policies/vault/CLAUDE.md`.
+
+Sebastian hat die Ergänzung am 20.09. bestätigt.
 
 ## Änderung 2 — Agent-Definitionen (`executor.md`, `verifier.md`)
 
@@ -117,7 +119,7 @@ Bewusst nicht aufgenommen: `node_modules` (Deny wirkt auch auf Grep; Kollision m
 `rules/context7.md`, die Typdefinitionen dort lesen lässt), `build` (dort liegt Doku).
 
 Gemessen: 5.322 Bash-Lesezugriffe in 60 Tagen laufen am `read-gate` vorbei, bis zu 865 davon auf
-Junk- oder Logpfade.
+Junk- oder Logpfade. Nach Umstellung der Junk-Erkennung auf Pfadsegmente (`messung/context_fill_analysis.py`, Lauf vom 20.09. mit Fenster bis 11:58) sind es 297; die 865 waren Substring-Treffer und damit eine Obergrenze.
 
 Doku-Recherche (Agent `claude-code-guide`, `code.claude.com/docs/en/permissions`,
 `permission-modes`): Deny-Regeln greifen in jedem Modus einschließlich `bypassPermissions`
@@ -172,11 +174,11 @@ nachgerechnet (`wc -c`, `sha256sum`); keine Abweichung zu den im Auftrag genannt
 
 ## Offen
 
-1. Nachmessung in zwei bis drei Wochen mit `context_fill_analysis.py`: Anteil der Läufe über 200K (Basis 21 Prozent, 59 Prozent des Input-Verbrauchs), Anteil wiederholter Reads (13,9 Prozent), Voll-Read-Anteil (74 Prozent), Voll-Reads von `index.md` (55 in 60 Tagen). Dazu das TTL-Experiment im wlh-Projekt ab 04.10.
-2. Messskripte ins Repo (Einschätzung 5.8), Ordnername offen; vorher Skript-Folgepunkte: `.jsx`/`.mjs`-Bucket, Hook-Treffer nach Datum filtern, Bash-Junk-Erkennung auf Pfadsegmente.
+1. Nachmessung in zwei bis drei Wochen mit `context_fill_analysis.py`: Anteil der Läufe über 200K (Basis 21 Prozent, 59 Prozent des Input-Verbrauchs), Anteil wiederholter Reads (13,9 Prozent), Voll-Read-Anteil (74 Prozent), Reads von `index.md` (55 in 60 Tagen). Dazu das TTL-Experiment im wlh-Projekt ab 04.10. Aufruf und Kennzahlen: `messung/README.md`.
+2. Messskripte ins Repo (Einschätzung 5.8): erledigt. Ordnername `messung/` von Sebastian freigegeben; die Skripte liegen jetzt unter `messung/` mit README und der Basislinie `context_fill_analysis_output_2026-09-20.txt`. Das Hauptskript hat ein Datumsfenster (`--since`, `--until`, `--out`); die drei Skript-Folgepunkte (Code-Endungen in Abschnitt B, Hook-Quoten erst ab 12.09., Junk-Erkennung auf Pfadsegmente) sind darin umgesetzt. `messung/` hält zwei Basislinien: `context_fill_analysis_output_2026-09-20.txt` (Originalskript, 11:58, in der Einschätzung zitiert) und `context_fill_analysis_basislinie_2026-09-20.txt` (Repo-Skript mit erweiterten Endungs- und Junk-Definitionen über dasselbe Fenster); die Nachmessung vergleicht gegen die zweite.
 3. Deny-Liste, Reichweite: `./`-Muster decken Dateien außerhalb des Arbeitsverzeichnisses nicht ab (Fall `vitest-full.log` im wlh-Projekt aus einer anderen Session); nicht abgedeckt ist auch `Plan Legacy code Migration/_test-workspace/graphify-out` (verschachtelt). Absolute `//`-Muster wären die Erweiterung, nicht freigegeben.
 4. Beobachtung: Beim Read-Tool in `dist/` kam die Deny-Meldung, nicht die Hook-Meldung des `read-gate`; die README-Aussage „der Hook läuft vor der Permission-Prüfung“ (Abschnitt Bewusste Dopplungen, git-push-Deny) gilt damit zumindest für Read-Deny-Regeln nicht oder nicht in dieser Reihenfolge. Prüfen, ob sie für Bash-Deny weiter stimmt.
-5. Platzierung der Paketgrößen-Regel in CLAUDE.md Zeile 40 (Verifier-Fund): eigener Spiegelstrich wäre klarer, kostet eine Zeile; Sebastians Entscheidung.
+5. Platzierung der Paketgrößen-Regel in CLAUDE.md Zeile 40 (Verifier-Fund): entschieden. Sebastian hat am 20.09. entschieden, dass die Regel in Zeile 40 bleibt.
 6. `inventar.md`: Fundort-Zeilennummern der Bestandseinträge und Tabellenköpfe (Bytes, Stand) seit Paket A veraltet; Abgleich als eigenes Paket.
 7. Paket C (ESLint-Logik aus `post-edit.sh` ins Konfigurator-Repo) bleibt offen.
 8. Doku-Umbau „Plan Legacy code Migration“ erst nach der Nachmessung.
