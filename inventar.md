@@ -68,6 +68,8 @@ Spalten: ID | Regel (≤20 Wörter) | Fundort | Ladezeitpunkt | Durchsetzung | T
 | R054 | Themenwechsel durch Nutzer → Hauptmodell schlägt Handoff in frische Session vor | CLAUDE.md:52 | immer | Text | 25 |
 | R055 | Je Phase (PLAN/DELEGIEREN/PRÜFEN) mindestens einmal melden, auch während Subagents laufen | CLAUDE.md:54 | immer | Text | 37 |
 | R056 | Geschriebene Dokumente: Länge am Bedarf ausrichten, Substanz abdecken und enden | CLAUDE.md:54 | immer | Text | 31 |
+| R057 | Ein Paket hat einen Gegenstand; Implementierung, Protokoll und Ingest sind drei Pakete | CLAUDE.md:40 | immer | Text | 22 |
+| R058 | Braucht ein Paket ein Dokument, nennt das Briefing Abschnitt oder Zeilen statt Voll-Read | CLAUDE.md:40 | immer | Text | 29 |
 
 **Zeilen ohne Regelinhalt (CLAUDE.md):** 1 (Titel), 2, 4, 8, 9 (reine Überschrift „Pointer an den Entscheidungspunkten:“), 14, 16, 17 (Überschrift), 18, 24, 25 (Überschrift), 26, 28, 29–30 (Tabellenkopf/Trenner), 35, 37, 38 (Überschrift), 39, 47, 49, 50 (Überschrift), 51, 53.
 
@@ -129,6 +131,8 @@ Spalten: ID | Regel (≤20 Wörter) | Fundort | Ladezeitpunkt | Durchsetzung | T
 | E025 | Gezielt betroffene Stellen editieren statt ganze Dateien neu schreiben | executor.md:25 | Agent-Lauf | Text | 20 |
 | E026 | Windows: `sed -i` wandelt CRLF→LF; bei CRLF Edit-Tool oder Python `newline=""` nutzen | executor.md:26 | Agent-Lauf | Text | 43 |
 | E027 | Bericht auf Deutsch, kriterienweise gegen Akzeptanzkriterien, inkl. Testergebnis/Folgepunkte | executor.md:30 | Agent-Lauf | Text | 34 |
+| E028 | Datei je Lauf einmal lesen; nach Edit nur geänderten Bereich mit offset/limit | executor.md:23 | Agent-Lauf | Text | 37 |
+| E029 | Dateien über etwa 400 Zeilen nur im benötigten Ausschnitt mit offset/limit lesen | executor.md:23 | Agent-Lauf | Text | 26 |
 
 **Zeilen ohne Regelinhalt (executor.md):** 1, 6 (Frontmatter-Begrenzer `---`), 2 (`name:`), 3 (`description:`), 7, 9, 11, 13, 15, 17, 19, 21, 23, 27, 29 (Leerzeilen), 14 („## Context7“), 18 („## Grenzen“), 22 („## Arbeitsweise“), 28 („## Bericht“) — Überschriften.
 
@@ -158,6 +162,8 @@ Spalten: ID | Regel (≤20 Wörter) | Fundort | Ladezeitpunkt | Durchsetzung | T
 | V020 | Manche Schritte brauchen Chat-Zustimmung, die der Subagent nicht einholen kann | verifier.md:34 | Agent-Lauf | Text | 24 |
 | V021 | Solche Schritte an Auftraggeber melden statt ausführen/warten, Rest liefern | verifier.md:34 | Agent-Lauf | Text | 44 |
 | V022 | Parallele Tool-Calls: unabhängige Anfragen in einer Antwort bündeln | verifier.md:38 | Agent-Lauf | Text | 41 |
+| V023 | Datei je Lauf einmal lesen | verifier.md:36 | Agent-Lauf | Text | 9 |
+| V024 | Dateien über etwa 400 Zeilen nur im benötigten Ausschnitt mit offset/limit lesen | verifier.md:36 | Agent-Lauf | Text | 26 |
 
 **Zeilen ohne Regelinhalt (verifier.md):** 1, 6 (Frontmatter-Begrenzer), 2 (`name:`), 3 (`description:`), 7, 9, 11, 13, 16, 18, 25, 27, 29, 31, 33, 35, 37, 39 (Leerzeilen), 12 („## Meldepflicht“), 17 („## Berichtsformat“), 28 („## Context7“), 32 („## Grenzen“), 36 („## Arbeitsweise“) — Überschriften.
 
@@ -219,6 +225,17 @@ Restliche CONTEXT.md-Zeilen sind Glossar (Begriff + „_Avoid_“-Synonymliste) 
 | S-DENY-08 | Deny `Bash(git push *)` | settings.json:27 | je Tool-Aufruf | Permission | 6 |
 | S-DENY-09 | Deny `Bash(gh *)` | settings.json:28 | je Tool-Aufruf | Permission | 4 |
 | S-DENY-10 | Deny `mcp__github` (ganzer MCP-Server) | settings.json:29 | je Tool-Aufruf | Permission | 3 |
+| S-DENY-11 | Deny `Read(./dist/**)` | settings.json:30 | je Tool-Aufruf | Permission | 4 |
+| S-DENY-12 | Deny `Read(./dist-*/**)` | settings.json:31 | je Tool-Aufruf | Permission | 4 |
+| S-DENY-13 | Deny `Read(./.wrangler/**)` | settings.json:32 | je Tool-Aufruf | Permission | 5 |
+| S-DENY-14 | Deny `Read(./graphify-out/**)` | settings.json:33 | je Tool-Aufruf | Permission | 6 |
+| S-DENY-15 | Deny `Read(./**/*.log)` | settings.json:34 | je Tool-Aufruf | Permission | 4 |
+| S-DENY-16 | Deny `Read(./**/package-lock.json)` | settings.json:35 | je Tool-Aufruf | Permission | 7 |
+| S-DENY-17 | Deny `Read(./**/pnpm-lock.yaml)` | settings.json:36 | je Tool-Aufruf | Permission | 6 |
+| S-DENY-18 | Deny `Read(./**/yarn.lock)` | settings.json:37 | je Tool-Aufruf | Permission | 5 |
+| S-DENY-19 | Deny `Read(./**/uv.lock)` | settings.json:38 | je Tool-Aufruf | Permission | 5 |
+| S-DENY-20 | Deny `Read(./**/poetry.lock)` | settings.json:39 | je Tool-Aufruf | Permission | 6 |
+| S-DENY-21 | Deny `Read(./**/Cargo.lock)` | settings.json:40 | je Tool-Aufruf | Permission | 5 |
 | S-SKILL-01 | skillOverride `agents-sdk: user-invocable-only` | settings.json:37 | immer (Skill-Sichtbarkeit) | Skill/Harness | 8 |
 | S-SKILL-02 | skillOverride `cloudflare: user-invocable-only` | settings.json:38 | immer | Skill/Harness | 8 |
 | S-SKILL-03 | skillOverride `cloudflare-email-service: user-invocable-only` | settings.json:39 | immer | Skill/Harness | 12 |
@@ -341,7 +358,7 @@ Legende Herkunft: eigen = `~/.claude/skills/*`; Plugin X = Plugin-Skill aus `~/.
 | resolving-merge-conflicts | 72 | 805 | — | — | ja | 0 |
 | sandbox-sdk | 343 | 5387 | — | user-invocable-only | nein (skillOverride) | 0 |
 | scaffold-exercises | 204 | 3443 | — | — | ja | 0 |
-| second-brain | 275 | 5424 | argument-hint | — | ja | 80 (2026-09-13) |
+| second-brain | 275 | 3722 (2026-09-20) | argument-hint | — | ja | 80 (2026-09-13) |
 | setup-matt-pocock-skills | 182 | 6690 | disable-model-invocation: true | — | nein (Frontmatter) | 0 |
 | setup-pre-commit | 238 | 2065 | — | — | ja | 0 |
 | skill-inspector | 228 | 9656 | — | — | ja | 5 (2026-09-08) |

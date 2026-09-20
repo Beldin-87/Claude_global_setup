@@ -17,8 +17,10 @@ Handoffs zwischen Sessions liegen unter
 ## Struktur
 
 - `inventar.md`, `empfehlungen.md` — Bestandsaufnahme und Entscheidungen des Audits.
+- `inventar-projekte-<Datum>.md` — Read-only-Inventar der Projekte unter `C:\GitHub\Projekte` als Messgrundlage.
+- `einschaetzung-<thema>-<Datum>.md` — Einschätzung mit Messbefund und Vorschlägen vor einer Freigabe.
 - `umsetzung-<Datum>.md` — Protokoll einer Umsetzung: was geändert wurde, Prüfergebnis, Messung vorher/nachher, offene Punkte.
-- `archiv/<Datum>/` — byte-exakte Sicherungen der Steuerdateien aus `~/.claude` vor einer Änderung, eine Kopie je Umsetzungsdatum (z. B. `archiv/2026-09-13/`).
+- `archiv/<Datum>/` — byte-exakte Sicherungen der Steuerdateien aus `~/.claude` vor einer Änderung, eine Kopie je Umsetzungsdatum (z. B. `archiv/2026-09-13/`). Bei zwei Umsetzungen an einem Tag trägt der zweite Ordner ein Thema-Suffix (`archiv/2026-09-20-token-spar-policies/`); ein Unterordner `vault/` hält Sicherungen von Dateien außerhalb von `~/.claude`, wenn eine Umsetzung sie mit ändert.
 - `archiv/bak-dateien/` — byte-exakte Archivkopien alter `.bak`-Dateien aus `~/.claude`, damit die Originale gefahrlos gelöscht werden können.
 - `hooks/tests/` — Regressionsmatrix für die globalen Hooks unter `~/.claude/hooks/` (siehe `hooks/tests/README.md`).
 
@@ -47,3 +49,9 @@ Abschnitt 6.
   Executor-Leser. Die zweite Nennung kostet wenige Tokens, sichert aber, dass
   ein Executor die Regel auch dann kennt, wenn er CLAUDE.md aus anderen
   Gründen nicht beachtet.
+- **Lesedisziplin in beiden Agent-Definitionen**: Der Satz „Eine Datei liest
+  du je Lauf einmal …“ steht in `agents/executor.md` und `agents/verifier.md`
+  fast wortgleich. Gleiche Begründung wie bei „Arbeitsweise“ und „Grenzen“:
+  der Body ersetzt den Standard-Subagent-Prompt, ohne die Wiederholung sähe
+  einer der beiden Leser die Regel gar nicht. Der Verifier-Satz kommt ohne
+  den Edit-Halbsatz aus, weil der Verifier keine Edit-Tools hat.
