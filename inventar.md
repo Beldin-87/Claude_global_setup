@@ -23,7 +23,7 @@ Spalten: ID | Regel (≤20 Wörter) | Fundort | Ladezeitpunkt | Durchsetzung | T
 | R009 | Eingebauten general-purpose-Agenten nicht mehr für Arbeitspakete nutzen | CLAUDE.md:6 | immer | Text | 20 |
 | R010 | `model`-Parameter bei Opus-/Fable-Aufruf explizit mitgeben, sonst gilt Default | CLAUDE.md:6 | immer | Text | 49 |
 | R011 | Weiterarbeiten während Subagents laufen, nicht blockierend warten | CLAUDE.md:6 | immer | Text | 18 |
-| R012 | Folgearbeit im selben Bereich: bestehenden Agent per SendMessage weiterführen | CLAUDE.md:6 | immer | Text | 41 |
+| R012 | Fund-basierte Folgearbeit per SendMessage weiterführen, briefbare an frischen Agent; Weiterführen ist schneller, nicht billiger | CLAUDE.md:6 | immer | Text | 70 |
 | R013 | Hauptmodell schreibt selbst keinen Code, auch kritisches Coding geht an Opus-Subagent | CLAUDE.md:6 | immer | Text | 22 |
 | R014 | Scheitert Opus an kritischer Kernlogik: Eskalation an Fable-Subagent | CLAUDE.md:6 | immer | Text | 24 |
 | R015 | PRÜFEN: Ergebnis mit frischem Blick gegen Akzeptanzkriterien prüfen; erfüllt=fertig | CLAUDE.md:7 | immer | Text | 24 |
@@ -169,6 +169,7 @@ Spalten: ID | Regel (≤20 Wörter) | Fundort | Ladezeitpunkt | Durchsetzung | T
 | CTX002 | Agent-Definition verliert eingebauten Parallel-Tool-Call-Hinweis; beide Definitionen führen ihn deshalb selbst | CONTEXT.md:57 | Pointer | Text | 32 |
 | CTX003 | Repo-Standards (CODING_STANDARDS-Datei) überstimmen die eingebaute Smell-Baseline von matt-code-review | CONTEXT.md:40 | Pointer | Text | 45 |
 | CTX004 | Traceability-Datei wird als Teil jedes Ticket-Arbeitspakets aktualisiert | CONTEXT.md:36 | Pointer | Text | 19 |
+| CTX005 | Resume-Write: SendMessage-Fortsetzung schreibt meist den gesamten Kontext neu in den Cache, TTL-unabhängig | CONTEXT.md:68 | Pointer | Text | 155 |
 
 Restliche CONTEXT.md-Zeilen sind Glossar (Begriff + „_Avoid_“-Synonymliste) ohne eigenständigen Verhaltens-Regelgehalt und wurden nicht einzeln kodiert.
 
