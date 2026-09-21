@@ -62,3 +62,4 @@ Quelle: beide Basislinien-Dateien in diesem Ordner sowie `einschaetzung-token-sp
 
 - Die Nachmessung läuft frühestens Mitte Oktober, mit `--since 2026-09-21` (Stichtag der Umsetzung), damit sie sauber von der Basislinie getrennt bleibt.
 - Die TTL-Auswertung im wlh-Projekt (`cache_ttl_analysis*.py`, Experiment ab 20.09.) braucht noch eine Aufschlüsselung je Projekt (offener Punkt aus `umsetzung-2026-09-20.md`).
+- Code-Regeln-Experiment im wlh-Projekt seit 21.09.2026: bei der Nachmessung die Zeile `wlh-preiskalkulation-app` getrennt betrachten und den Token-Zahlen die Verstoßzahlen aus `npm run pruefe:code:bericht` gegenüberstellen (Basislinie: `docs/code-regeln-basislinie-2026-09-21.md` im wlh-Repo).
